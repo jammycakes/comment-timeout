@@ -228,11 +228,11 @@ class jm_CommentTimeout
 			wp_die('Your comment was rejected because it included a BBCode hyperlink. This blog does not use BBCode.');
 		}
 
-		// reject comments and trackbacks with more than two hyperlinks
+		// reject comments and trackbacks with more than the limit of hyperlinks
 
-		if ($this->settings['RejectLinks'] > 0) {
+		if ($this->settings['RejectLinks'] >= 0) {
 			$matches = array();
-			if (preg_match_all('|<a(\s+.*?)?>(.*?)</a>|i', $comment['comment_content'], &$matches)
+			if (preg_match_all('|<a(\s+.*?)?>(.*?)</a>|is', $comment['comment_content'], $matches)
 				> $this->settings['RejectLinks']) {
 				wp_die('Your comment was rejected because it contained too many hyperlinks. This blog limits comments to a maximum of ' .
 					$this->settings['RejectLinks'] . ' hyperlinks.');
@@ -469,18 +469,18 @@ class jm_CommentTimeout
 	function save_settings()
 	{
 		$this->settings = array();
-		$this->settings['PostAge'] = (isset($_POST['ctLimitByAge']) ? (int)$_POST['PostAge'] : 0);
-		$this->settings['CommentAge'] = (isset($_POST['ctLimitByCommentAge']) ? (int)$_POST['CommentAge'] : 0);
-		$this->settings['CommentLimit'] = (isset($_POST['ctCommentLimit']) ? (int)$_POST['CommentLimit'] : 0);
+		$this->settings['PostAge'] = (isset($_POST['ctLimitByAge']) ? (int)$_POST['PostAge'] : -1);
+		$this->settings['CommentAge'] = (isset($_POST['ctLimitByCommentAge']) ? (int)$_POST['CommentAge'] : -1);
+		$this->settings['CommentLimit'] = (isset($_POST['ctCommentLimit']) ? (int)$_POST['CommentLimit'] : -1);
 		$this->settings['DoPages'] = isset($_POST['DoPages']);
 		$this->settings['DoPings'] = isset($_POST['DoPings']);
 		$this->settings['RejectBBCode'] = isset($_POST['RejectBBCode']);
-		$this->settings['RejectLinks'] = (isset($_POST['ctRejectLinks']) ? (int)$_POST['RejectLinks'] : 0);
+		$this->settings['RejectLinks'] = (isset($_POST['ctRejectLinks']) ? (int)$_POST['RejectLinks'] : -1);
 		$this->settings['UserAgentCheck'] = isset($_POST['UserAgentCheck']);
 		$this->settings['IPAddressCheck'] = isset($_POST['IPAddressCheck']);
-		$this->settings['BadBehavior'] = (isset($_POST['ctBadBehavior']) ? (int)$_POST['BadBehavior'] : 0);
+		$this->settings['BadBehavior'] = (isset($_POST['ctBadBehavior']) ? (int)$_POST['BadBehavior'] : -1);
 		$this->settings['BadBehaviorStrict'] = isset($_POST['BadBehaviorStrict']);
-		$this->settings['SpamQueue'] = (isset($_POST['ctSpamQueue']) ? (int)$_POST['SpamQueue'] : 0);
+		$this->settings['SpamQueue'] = (isset($_POST['ctSpamQueue']) ? (int)$_POST['SpamQueue'] : -1);
 		update_option('jammycakes_comment_locking', $this->settings);
 		?>
 			<div id='comment-locking-saved' class='updated fade-ffff00'><p><strong> <?php _e('Options saved.') ?></strong></p></div>
@@ -489,20 +489,24 @@ class jm_CommentTimeout
 	}
 
 
-	function render_checkbox($checkbox_name, $setting_name = "")
+	function render_checkbox($checkbox_name, $setting_name = "", $allow_zero = FALSE)
 	{
 		if ($setting_name == '') $setting_name = $checkbox_name;
+		$checked = isset($this->settings[$setting_name]) &&
+			($this->settings[$setting_name] >= ($allow_zero ? 0 : 1));
 		echo '<input type="checkbox" ';
-		echo $this->settings[$setting_name] ? 'checked="checked"' : '';
+		echo $checked ? 'checked="checked"' : '';
 		echo " name=\"$checkbox_name\" />";
 	}
 
 
-	function render_textbox_int($textbox_name, $setting_name = "", $size=4)
+	function render_textbox_int($textbox_name, $setting_name = "", $size=4, $allow_zero = FALSE)
 	{
 		if ($setting_name == '') $setting_name = $textbox_name;
+		$checked = isset($this->settings[$setting_name]) &&
+			($this->settings[$setting_name] >= ($allow_zero ? 0 : 1));
 		echo '<input type="textbox" value="';
-		if ($this->settings[$setting_name] != '') {
+		if ($checked) {
 			echo (int)$this->settings[$setting_name];
 		}
 		echo "\" name=\"$textbox_name\" size=\"$size\" />";
@@ -650,11 +654,11 @@ class jm_CommentTimeout
 						</li>
 						<li>
 							<label>
-								<?php $this->render_checkbox('ctRejectLinks', 'RejectLinks'); ?>
+								<?php $this->render_checkbox('ctRejectLinks', 'RejectLinks', TRUE); ?>
 								Reject all comments that contain more than
 							</label>
 							<label>
-								<?php $this->render_textbox_int('RejectLinks'); ?>
+								<?php $this->render_textbox_int('RejectLinks', 'RejectLinks', 4, TRUE); ?>
 								hyperlinks
 							</label>
 						</li>
@@ -678,7 +682,7 @@ class jm_CommentTimeout
 					<input type="submit" name="Submit" value="Update Options &raquo;" />
 				</p>
 
-				<p style="text-align:center">Comment Timeout version 1.3 alpha 1 - Copyright 2007 <a href="http://www.jamesmckay.net/">James McKay</a></p>
+				<p style="text-align:center">Comment Timeout version 1.3 beta 1 - Copyright 2007 <a href="http://www.jamesmckay.net/">James McKay</a></p>
 			</form>
 		</div>
 		<?php

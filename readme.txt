@@ -1,6 +1,6 @@
 Comment Timeout plugin for WordPress
 ====================================
-version 1.3 alpha 1
+version 1.3 beta 1
 
 Copyright 2006 James McKay
 http://www.jamesmckay.net/
@@ -16,9 +16,11 @@ hyperlinks in posts, or to shut off comments and trackbacks to IP
 addresses that have been reported by your spam queue or by Bad Behavior
 as particularly problematic.
 
+
 Installation
 ============
 Copy the file CommentTimeout.php to your wp-content/plugins directory.
+
 
 Configuration
 =============
@@ -28,6 +30,7 @@ You can change various settings on the "Comment Timeout" page under the
 The default settings are to disable comments and trackbacks on all posts
 older than four months that have not had a comment for more than two months,
 with no overall limit on the number of comments.
+
 
 Features
 ========
@@ -86,6 +89,18 @@ This plugin requires WordPress version 2.0 or later; it is known not to work
 with earlier versions (but you should upgrade anyway for security reasons).
 
 
+Known issues
+============
+No distinction is made between comments, trackbacks and pingbacks in
+calculating the cut-off date for commenting. This may cause comments to be
+re-opened after a trackback if you leave trackbacks and pingbacks open.
+
+After upgrading from version 1.3 alpha 1 or 1.3 alpha 2, the plugin will
+reject all comments containing hyperlinks if it was previously set to allow
+unlimited hyperlinks. To fix this, re-set the relevant option in the
+configuration page.
+
+
 Redistribution
 ==============
 This program is free software; you can redistribute it and/or modify
@@ -135,3 +150,8 @@ Changelog
 2007-01-30:	Added extra granularity to rel="nofollow" control
 2007-02-02:	Added spam queue/BB integration, excessive hyperlink blocking
 		and User agent/IP checking
+2007-03-06:	Bug fix release: you can now set a zero limit on hyperlinks;
+		hyperlinks which contain line breaks are now counted correctly;
+		warnings are no longer raised on servers where 
+		allow_call_time_pass_reference is turned off in php.ini.
+		
