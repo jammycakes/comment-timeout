@@ -4,7 +4,7 @@
 Plugin Name: Comment Timeout
 Plugin URI: http://www.jamesmckay.net/categories/wordpress/comment-timeout/
 Description: Automatically closes comments on blog entries after a user-configurable period of time. It has options which allow you to keep the discussion open for longer on older posts which have had recent comments accepted, or to place a fixed limit on the total number of comments in the discussion. Activate the plugin and go to <a href="options-general.php?page=comment-timeout">Options &gt;&gt; Comment Timeout</a> to configure.
-Version: 1.3-alpha 2
+Version: 1.3-beta 2
 Author: James McKay
 Author URI: http://www.jamesmckay.net/
 */
@@ -371,8 +371,22 @@ class jm_CommentTimeout
 	 * Overwrites the comment status for all the posts in the loop.
 	 */
 
-	function &process_posts(&$posts)
+	function process_posts(&$posts)
 	{
+		// Check that we have an array of posts
+		
+		if (!is_array($posts)) {
+			// Is it a single post? If so, process it as an array of posts
+			if (is_object($posts) && isset($posts->comment_status)) {
+				$p = process_posts(array($posts));
+				return $p[0];
+			}
+			else {
+				// Otherwise don't do anything
+				return $posts;
+			}
+		}
+		
 		$this->get_settings();
 		if ($this->check_ip()) {
 			foreach ($posts as $k => $v) {
@@ -682,7 +696,7 @@ class jm_CommentTimeout
 					<input type="submit" name="Submit" value="Update Options &raquo;" />
 				</p>
 
-				<p style="text-align:center">Comment Timeout version 1.3 beta 1 - Copyright 2007 <a href="http://www.jamesmckay.net/">James McKay</a></p>
+				<p style="text-align:center">Comment Timeout version 1.3 beta 2 - Copyright 2007 <a href="http://www.jamesmckay.net/">James McKay</a></p>
 			</form>
 		</div>
 		<?php
