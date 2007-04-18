@@ -201,7 +201,7 @@ class jm_CommentTimeout
 		}
 		if ($this->settings['IPAddressCheck']) {
 			echo '<input type="hidden" name="ctIPAddress" value="'
-				. $this->hash($_SERVER['REMOTE_ADDR']);
+				. $this->hash($_SERVER['REMOTE_ADDR']) . '" />';
 		}
 	}
 
