@@ -13,24 +13,24 @@ Author URI: http://www.jamesmckay.net/
 /*
  * Copyright (c) 2007 James McKay
  * http://www.jamesmckay.net/
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE. 
+ * SOFTWARE.
  */
 
 /*
@@ -44,7 +44,7 @@ function debug_r($obj) {
 	print "\n-->\n";
 }
 */
-define('COMMENT_TIMEOUT_VERSION', '2.0'); 
+define('COMMENT_TIMEOUT_VERSION', '2.0');
 
 // For compatibility with WP 2.0
 
@@ -58,16 +58,16 @@ if (!function_exists('wp_die')) {
 class jm_CommentTimeout
 {
 	var $settings;
-	
+
 	/* ====== Constructor ====== */
-	
+
 	/**
 	 * Initialises the plugin, setting up the actions and filters.
 	 */
 
 	function jm_CommentTimeout()
 	{
-//		add_filter('the_posts', array(&$this, 'process_posts'));		
+		add_filter('the_posts', array(&$this, 'process_posts'));
 		add_action('admin_menu', array(&$this, 'add_config_page'));
 		add_action('dbx_post_sidebar', array(&$this, 'post_sidebar'));
 		add_action('dbx_page_sidebar', array(&$this, 'post_sidebar'));
@@ -82,7 +82,7 @@ class jm_CommentTimeout
 	/**
 	 * Retrieves the settings from the WordPress settings database.
 	 */
-	
+
 	function get_settings()
 	{
 		// Defaults for the settings
@@ -125,17 +125,17 @@ class jm_CommentTimeout
 		}
 		return $this->settings;
 	}
-	
+
 	/* ====== save_settings ====== */
-	
+
 	/**
 	 * Saves the settings
 	 */
-	 
+
 	function save_settings()
 	{
 		$this->get_settings();
-		
+
 		// Insert the new settings, with validation and type coercion
 
 		foreach ($this->defaultSettings as $k=>$v) {
@@ -144,14 +144,14 @@ class jm_CommentTimeout
 		$this->sanitize_settings();
 		update_option('jammycakes_comment_locking', $this->settings);
 	}
-	
+
 	/* ====== sanitize_settings ====== */
-	
+
 	/**
 	 * Makes sure settings are all in the correct format,
 	 * also converts CT 1.0 versions to CT 2.0
 	 */
-	
+
 	function sanitize_settings()
 	{
 		foreach (array_keys($this->settings) as $k) { // iterator safe
@@ -184,9 +184,9 @@ class jm_CommentTimeout
 		}
 	}
 
-	
+
 	/* ====== get_post_metainfo ====== */
-	
+
 	/**
 	 * Gets comment, trackback and individual setting information for comments
 	 * @param $first The numerical ID of the first post to examine
@@ -213,14 +213,14 @@ class jm_CommentTimeout
 				break;
 		}
 		if ($overrides) {
-			$sql .= "left join $wpdb->postmeta pm on p.ID=pm.post_id and pm.meta_key='_comment_timeout' ";  
+			$sql .= "left join $wpdb->postmeta pm on p.ID=pm.post_id and pm.meta_key='_comment_timeout' ";
 		}
 		$sql .= 'where p.ID>=' . (int) $first . ' and p.ID<=' . (int) $last .
 			' group by p.ID';
 		if ($overrides) {
 			$sql .= ', pm.meta_value';
 		}
-		
+
 		$results = $wpdb->get_results($sql);
 
 		// Set it up as an associative array indexed by ID
@@ -228,21 +228,21 @@ class jm_CommentTimeout
 		foreach ($results as $r) {
 			$meta[$r->ID] = $r;
 		}
-		
+
 		return $meta;
-	} 
-	
+	}
+
 	/* ====== process_posts ====== */
-	
+
 	/**
 	 * Goes through the list of posts, checking each one to see if it should
 	 * have comments closed.
 	 */
-	
+
 	function process_posts($posts)
 	{
 		// Check that we have an array of posts
-		
+
 		if (!is_array($posts)) {
 			// Is it a single post? If so, process it as an array of posts
 			if (is_object($posts) && isset($posts->comment_status)) {
@@ -254,13 +254,13 @@ class jm_CommentTimeout
 				return $posts;
 			}
 		}
-				
+
 		// OK so now we have an array, let's process the posts
 		// First, get the minimum and maximum post IDs
-		
+
 		$this->get_settings();
-		
-		$minID = $maxID = 0;		
+
+		$minID = $maxID = 0;
 		foreach ($posts as $p) {
 			if ($maxID < $p->ID) {
 				$maxID = $p->ID;
@@ -269,9 +269,9 @@ class jm_CommentTimeout
 				$minID = $p->ID;
 			}
 		}
-		
+
 		// Get the metainfo for the posts
-		
+
 		switch($this->settings['DoPings']) {
 			case 'ignore':
 			case false:	// for CT 1.x compatibility
@@ -294,26 +294,26 @@ class jm_CommentTimeout
 		}
 
 		// Now calculate the date and time (UTC) of when to close the post
-		
+
 		// NB need to get the keys and values this way because PHP 4 gets funny
-		// about references if you do foreach ($posts as $k => $p) 
-		
+		// about references if you do foreach ($posts as $k => $p)
+
 		foreach (array_keys($posts) as $k) {
 			$p =& $posts[$k];
 			$cm = $commentmeta[$p->ID];
-			
+
 			/*
 			 * Preconditions: skip if either of the following are true:
 			 * 1. Is a non-post and we are only checking posts
 			 * 2. Is flagged for ignore and we are allowing overrides
 			 */
-			
+
 			$isPost = ($p->post_status == 'publish' || $p->post_status == 'private')
 				&& ($p->post_type == '' || $p->post_type == 'post');
 
 			$proceed = ($isPost || $this->settings['DoPages']) &&
-				(@$cm->comment_timeout != 'ignore' || !$this->settings['AllowOverride']); 
-			
+				(@$cm->comment_timeout != 'ignore' || !$this->settings['AllowOverride']);
+
 			/*
 			 * Per-post settings are stored in a post meta field called
 			 * _comment_timeout. This can have one of three values:
@@ -321,7 +321,7 @@ class jm_CommentTimeout
 			 * "default" (or nothing) means we use the default settings
 			 * two integers separated by a comma means we use per-post settings
 			 * - in this case the integers represent the days from the post and
-			 *   the last comment respectively 
+			 *   the last comment respectively
 			 */
 
 			if ($proceed) {
@@ -348,7 +348,7 @@ class jm_CommentTimeout
 				}
 				// Cutoff for comments
 				$p->cutoff_comments = $cutoff;
-								
+
 				if (isset($pingmeta)) {
 					$pm =& $pingmeta[$p->ID];
 					$cutoff = strtotime($p->post_date_gmt) + 86400 * $postAge;
@@ -361,34 +361,34 @@ class jm_CommentTimeout
 					// Cutoff for pings
 					$p->cutoff_pings = $cutoff;
 				}
-				
+
 				/*
 				 * Now set the comment status. We only do this if we are
 				 * closing comments -- if we are moderating instead, we need to
 				 * leave the comment form open
 				 */
-				
+
 				if ($this->settings['Mode'] != 'moderate') {
 					$now = time();
 					if (isset($p->cutoff_comments) && $now > $p->cutoff_comments) {
-						$p->comment_status = 'closed';	
+						$p->comment_status = 'closed';
 					}
 					if (isset($p->cutoff_pings) && $now > $p->cutoff_pings) {
 						$p->ping_status = 'closed';
 					}
 				}
-			} // Post processing ends here 
+			} // Post processing ends here
 		}
-		
+
 		return $posts;
 	}
 
 	/* ====== preprocess_comment filter ====== */
-	
+
 	/**
 	 * Process a submitted comment. Die if it's not OK
 	 */
-	
+
 	function preprocess_comment($comment)
 	{
 		global $wpdb;
@@ -423,14 +423,14 @@ class jm_CommentTimeout
 		}
 		return $comment;
 	}
-	
+
 	/* ====== save_post ====== */
 
 	/**
 	 * Called when a post or page is saved. Updates CT's per-post settings
 	 * from the bit in the sidebar.
 	 */
-	
+
 	function save_post($postID)
 	{
 		$this->get_settings();
@@ -447,7 +447,7 @@ class jm_CommentTimeout
 					$setting = false;
 					break;
 			}
-			
+
 			if ($setting !== false) {
 				if (!update_post_meta($postID, '_comment_timeout', $setting)) {
 					add_post_meta($postID, '_comment_timeout', $setting);
@@ -458,24 +458,24 @@ class jm_CommentTimeout
 			}
 		}
 	}
-	
+
 	/* ====== add_config_page ====== */
-	
+
 	/**
 	 * Adds the configuration page to the submenu
 	 */
-	
+
 	function add_config_page()
 	{
 		add_submenu_page('options-general.php', __('Comment Timeout'), __('Comment Timeout'), 'manage_options', 'comment-timeout', array(&$this, 'config_page'));
 	}
-	
+
 	/* ====== config_page ====== */
-	
+
 	/**
 	 * Loads in and renders the configuration page in the dashboard.
 	 */
-	
+
 	function config_page()
 	{
 		if ('POST' == $_SERVER['REQUEST_METHOD']) {
@@ -490,14 +490,14 @@ class jm_CommentTimeout
 		}
 		require_once(dirname(__FILE__) . '/comment-timeout.config.php');
 	}
-	
+
 	/* ====== post_sidebar ====== */
-	
+
 	/**
 	 * Adds an entry to the post's sidebar to allow us to set simple comment
 	 * settings on a post-by-post basis.
 	 */
-	
+
 	function post_sidebar()
 	{
 		$this->get_settings();
@@ -505,18 +505,18 @@ class jm_CommentTimeout
 			require_once(dirname(__FILE__) . '/comment-timeout.post.php');
 		}
 	}
-	
-	
+
+
 	/* ====== comment_form ====== */
-	
+
 	function comment_form()
-	{		
+	{
 		global $post;
 		$this->get_settings();
 		if (isset ($post->cutoff_comments)) {
 			$ct = $post->cutoff_comments - time();
 			if ($ct < 0 && $this->settings['Mode'] == 'moderate') {
-				echo '<p class="comment-timeout">Comments will be sent to the moderation queue.';
+				echo '<p class="comment-timeout">Comments will be sent to the moderation queue.</p>';
 			}
 			elseif ($ct >= 0 && $this->settings['Mode'] == 'close') {
 				$ct1 = $post->cutoff_comments + (get_option('gmt_offset') * 3600);
