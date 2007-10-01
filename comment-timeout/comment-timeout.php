@@ -3,7 +3,7 @@
 Plugin Name: Comment Timeout
 Plugin URI: http://www.jamesmckay.net/code/comment-timeout/
 Description: Automatically closes comments on blog entries after a user-configurable period of time. It has options which allow you to keep the discussion open for longer on older posts which have had recent comments accepted, or to place a fixed limit on the total number of comments in the discussion. Activate the plugin and go to <a href="options-general.php?page=comment-timeout">Options &gt;&gt; Comment Timeout</a> to configure.
-Version: 2.0
+Version: 2.0.1
 Author: James McKay
 Author URI: http://www.jamesmckay.net/
 */
@@ -44,7 +44,7 @@ function debug_r($obj) {
 	print "\n-->\n";
 }
 */
-define('COMMENT_TIMEOUT_VERSION', '2.0');
+define('COMMENT_TIMEOUT_VERSION', '2.0.1');
 
 // For compatibility with WP 2.0
 
@@ -395,10 +395,10 @@ class jm_CommentTimeout
 		$this->get_settings();
 		$post = get_post($comment['comment_post_ID']);
 		$post = $this->process_posts($post);
-
+		
 		$now = time();
 		$isPing = ($comment['comment_type'] == 'trackback' || $comment['comment_type'] == 'pingback');
-		$isClosed = $isPing ? ($post->comment_status == 'closed') : ($post->ping_status == 'closed');
+		$isClosed = $isPing ? ($post->ping_status == 'closed') : ($post->comment_status == 'closed');
 		if ($isPing) {
 			$timedOut = isset($post->cutoff_pings) && ($now > $post->cutoff_pings);
 		}
@@ -415,7 +415,7 @@ class jm_CommentTimeout
 				break;
 			case 'close':
 			default:
-				if ($isClosed || $timedOut) {
+				if ($isClosed || $timedOut) {				 
 					do_action('comment_closed', $comment->comment_post_ID);
 					wp_die('Sorry, comments are closed for this item.');
 				}

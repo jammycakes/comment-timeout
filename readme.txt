@@ -4,7 +4,7 @@ Donate link: http://www.jamesmckay.net/code/comment-timeout/
 Tags: comments, spam
 Requires at least: 2.0
 Tested up to: 2.2
-Stable tag: 2.0
+Stable tag: 2.0.1
 
 Closes comments on blog entries after a user-configurable period of time, with an option to make allowances for active discussions.
 
