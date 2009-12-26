@@ -1,12 +1,4 @@
 <?php
-/*
-Plugin Name: Comment Timeout
-Plugin URI: http://www.jamesmckay.net/code/comment-timeout/
-Description: Automatically closes comments on blog entries after a user-configurable period of time. It has options which allow you to keep the discussion open for longer on older posts which have had recent comments accepted, or to place a fixed limit on the total number of comments in the discussion. Activate the plugin and go to <a href="options-general.php?page=comment-timeout">Options &gt;&gt; Comment Timeout</a> to configure.
-Version: 2.0.1
-Author: James McKay
-Author URI: http://www.jamesmckay.net/
-*/
 
 define('COMMENT_TIMEOUT_VERSION', '2.0.1');
 
@@ -452,7 +444,7 @@ class jm_CommentTimeout
 		else {
 			$this->get_settings();
 		}
-		require_once(dirname(__FILE__) . '/comment-timeout.config.php');
+		require_once(dirname(__FILE__) . '/form.config.php');
 	}
 
 	/* ====== post_sidebar ====== */
@@ -466,7 +458,7 @@ class jm_CommentTimeout
 	{
 		$this->get_settings();
 		if ($this->settings['AllowOverride']) {
-			require_once(dirname(__FILE__) . '/comment-timeout.post.php');
+			require_once(dirname(__FILE__) . '/form.post.php');
 		}
 	}
 
