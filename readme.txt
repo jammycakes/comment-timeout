@@ -3,7 +3,7 @@ Contributors: jammycakes
 Donate link: http://www.jamesmckay.net/code/comment-timeout/
 Tags: comments, spam
 Requires at least: 2.0
-Tested up to: 2.2
+Tested up to: 2.9
 Stable tag: 2.0.1
 
 Closes comments on blog entries after a user-configurable period of time, with an option to make allowances for active discussions.
@@ -16,6 +16,8 @@ discussion open for longer on older posts which have had recent comments
 accepted, or to override the timeout on a post-by-post basis.
 
 == Installation ==
+
+Note: PHP 4 is no longer supported. This version of Comment Timeout requires PHP 5.2 or later.
 
 * Copy the directory `comment-timeout` and all the files in it into your
 `/wp-content/plugins` directory.
