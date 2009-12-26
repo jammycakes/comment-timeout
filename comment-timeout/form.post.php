@@ -50,7 +50,7 @@
 		document.getElementById('ctCommentAge').onchange =
 		function() {
 			document.getElementById('ct_Close').checked = true;
-		};	
+		};
 	}
 
 </script>

@@ -349,7 +349,7 @@ class jm_CommentTimeout
 		$this->get_settings();
 		$post = get_post($comment['comment_post_ID']);
 		$post = $this->process_posts($post);
-		
+
 		$now = time();
 		$isPing = ($comment['comment_type'] == 'trackback' || $comment['comment_type'] == 'pingback');
 		$isClosed = $isPing ? ($post->ping_status == 'closed') : ($post->comment_status == 'closed');
@@ -369,7 +369,7 @@ class jm_CommentTimeout
 				break;
 			case 'close':
 			default:
-				if ($isClosed || $timedOut) {				 
+				if ($isClosed || $timedOut) {
 					do_action('comment_closed', $comment->comment_post_ID);
 					wp_die('Sorry, comments are closed for this item.');
 				}

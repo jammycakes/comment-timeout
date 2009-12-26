@@ -3,21 +3,21 @@
 	<h2>Closing comments</h2>
 
 	<form action="" method="POST" id="comment-timeout-conf">
-		
+
 		<fieldset class="options">
 			<legend>
 				Comment timeout policy:
 			</legend>
-			
-			<table class="optiontable"> 
-				<tr valign="top"> 
+
+			<table class="optiontable">
+				<tr valign="top">
 					<th scope="row">
 						<label for="ctPostAge">Allow comments on posts less than:</label>
-					</th> 
+					</th>
 					<td>
 						<input id="ctPostAge" name="PostAge" size="6" value="<?php echo $this->settings['PostAge']; ?>" />
 						days old
-					</td> 
+					</td>
 				</tr>
 
 				<tr valign="top">
@@ -74,7 +74,7 @@
 					<th scope="row">Post-specific settings:</th>
 					<td>
 						<input type="checkbox" name="DoPages" id="ctDoPages" value="true" <?php checked($this->settings['DoPages'], 'true'); ?> />
-						<label for="ctDoPages">Apply these rules to pages, images and file uploads</label>						
+						<label for="ctDoPages">Apply these rules to pages, images and file uploads</label>
 						<br />
 						<input type="checkbox" name="AllowOverride" id="ctAllowOverride" value="true" <?php checked($this->settings['AllowOverride'], 'true'); ?> />
 						<label for="ctAllowOverride">Allow individual posts to override these settings</label>
@@ -89,7 +89,7 @@
 		</p>
 
 		<p style="text-align:center">
-			Comment Timeout version <?php echo COMMENT_TIMEOUT_VERSION; ?> - 
+			Comment Timeout version <?php echo COMMENT_TIMEOUT_VERSION; ?> -
 			Copyright 2007-2010 <a href="http://www.jamesmckay.net/">James McKay</a>
 			-
 			<a href="http://www.jamesmckay.net/code/comment-timeout/2.0/">Help and FAQ</a>
