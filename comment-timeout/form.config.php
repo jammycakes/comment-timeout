@@ -90,7 +90,7 @@
 
 		<p style="text-align:center">
 			Comment Timeout version <?php echo COMMENT_TIMEOUT_VERSION; ?> - 
-			Copyright 2007 <a href="http://www.jamesmckay.net/">James McKay</a>
+			Copyright 2007-2010 <a href="http://www.jamesmckay.net/">James McKay</a>
 			-
 			<a href="http://www.jamesmckay.net/code/comment-timeout/2.0/">Help and FAQ</a>
 		</p>

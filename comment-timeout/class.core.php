@@ -1,7 +1,5 @@
 <?php
 
-define('COMMENT_TIMEOUT_VERSION', '2.0.1');
-
 // For compatibility with WP 2.0
 
 if (!function_exists('wp_die')) {
