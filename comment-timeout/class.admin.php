@@ -15,8 +15,14 @@ class jmct_Admin
 		$this->settings =& $this->core->get_settings();
 		add_submenu_page('options-general.php', __('Comment Timeout'), __('Comment Timeout'), 'manage_options', 'comment-timeout', array(&$this, 'config_page'));
 		if ($this->settings['AllowOverride']) {
-			add_action('dbx_post_sidebar', array(&$this, 'post_sidebar'));
-			add_action('dbx_page_sidebar', array(&$this, 'post_sidebar'));
+			if (function_exists('add_meta_box')) {
+				add_meta_box('comment-timeout', __('Comment Timeout'), array(&$this, 'post_custombox'), 'post', 'normal');
+				add_meta_box('comment-timeout', __('Comment Timeout'), array(&$this, 'post_custombox'), 'page', 'normal');
+			}
+			else {
+				add_action('dbx_post_sidebar', array(&$this, 'post_sidebar'));
+				add_action('dbx_page_sidebar', array(&$this, 'post_sidebar'));
+			}
 			add_action('save_post', array(&$this, 'save_post'));
 		}
 	}
@@ -74,15 +80,42 @@ class jmct_Admin
 	}
 
 
+	/* ====== post_custombox ====== */
+
+	/**
+	 * Adds an entry to the "Edit Post" screen to allow us to set simple comment
+	 * settings on a post-by-post basis.
+	 * For WordPress versions 2.5 or later.
+	 */
+
+	public function post_custombox()
+	{
+		$label_class = '';
+		require_once(dirname(__FILE__) . '/form.post.php');
+	}
+
+
+
 	/* ====== post_sidebar ====== */
 
 	/**
 	 * Adds an entry to the post's sidebar to allow us to set simple comment
 	 * settings on a post-by-post basis.
+	 * For WordPress versions < 2.5
 	 */
 
 	public function post_sidebar()
 	{
-		require_once(dirname(__FILE__) . '/form.post.php');
+		$label_class = 'selectit';
+		echo <<< SIDEBAR1
+<fieldset id="comment-timeout-div" class="dbx-box">
+	<h3 class="dbx-handle">Comment Timeout:</h3>
+	<div class="dbx-content">
+SIDEBAR1;
+		post_custombox();
+		echo <<< SIDEBAR2
+	</div>
+</fieldset>
+SIDEBAR2;
 	}
 }
