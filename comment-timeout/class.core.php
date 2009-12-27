@@ -11,6 +11,17 @@ if (!function_exists('wp_die')) {
 
 class jmct_Core
 {
+	public static function init()
+	{
+		$core = new jmct_Core();
+		add_filter('the_posts', array(&$core, 'process_posts'));
+		add_action('admin_menu', array(&$core, 'add_config_page'));
+		// Needs to be called before Akismet
+		add_filter('preprocess_comment', array(&$core, 'preprocess_comment'), 0);
+		add_action('comment_form', array(&$core, 'comment_form'));
+	}
+
+
 	private $settings;
 	private $defaultSettings;
 
@@ -20,13 +31,8 @@ class jmct_Core
 	 * Initialises the plugin, setting up the actions and filters.
 	 */
 
-	function __construct()
+	private function __construct()
 	{
-		add_filter('the_posts', array(&$this, 'process_posts'));
-		add_action('admin_menu', array(&$this, 'add_config_page'));
-		// Needs to be called before Akismet
-		add_filter('preprocess_comment', array(&$this, 'preprocess_comment'), 0);
-		add_action('comment_form', array(&$this, 'comment_form'));
 	}
 
 	/* ====== get_settings ====== */
@@ -35,7 +41,7 @@ class jmct_Core
 	 * Retrieves the settings from the WordPress settings database.
 	 */
 
-	function get_settings()
+	public function get_settings()
 	{
 		// Defaults for the settings
 
@@ -85,7 +91,7 @@ class jmct_Core
 	 * Saves the settings
 	 */
 
-	function save_settings()
+	public function save_settings()
 	{
 		$this->get_settings();
 
@@ -106,7 +112,7 @@ class jmct_Core
 	 * also converts CT 1.0 versions to CT 2.0
 	 */
 
-	function sanitize_settings()
+	private function sanitize_settings()
 	{
 		foreach (array_keys($this->settings) as $k) { // iterator safe
 			$v = $this->settings[$k];
@@ -146,7 +152,7 @@ class jmct_Core
 	 * have comments closed.
 	 */
 
-	function process_posts($posts)
+	public function process_posts($posts)
 	{
 		// Check that we have an array of posts
 
@@ -174,7 +180,7 @@ class jmct_Core
 	 * Process a submitted comment. Die if it's not OK
 	 */
 
-	function preprocess_comment($comment)
+	public function preprocess_comment($comment)
 	{
 		require_once(dirname(__FILE__) . '/class.comment-processor.php');
 		$processor = new jmct_CommentProcessor($this, $comment);
@@ -302,4 +308,4 @@ class jmct_Core
 	}
 }
 
-$myCommentTimeout = new jmct_Core();
+jmct_Core::init();
