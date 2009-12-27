@@ -1,6 +1,5 @@
 <?php
 	global $post_ID;
-	$this->get_settings();
 	$setting = get_post_meta($post_ID, '_comment_timeout', true);
 	$radio = array();
 	$ctPostAge = $this->settings['PostAge'];
