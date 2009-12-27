@@ -24,11 +24,8 @@ class jmct_Core
 	{
 		add_filter('the_posts', array(&$this, 'process_posts'));
 		add_action('admin_menu', array(&$this, 'add_config_page'));
-		add_action('dbx_post_sidebar', array(&$this, 'post_sidebar'));
-		add_action('dbx_page_sidebar', array(&$this, 'post_sidebar'));
 		// Needs to be called before Akismet
 		add_filter('preprocess_comment', array(&$this, 'preprocess_comment'), 0);
-		add_action('save_post', array(&$this, 'save_post'));
 		add_action('comment_form', array(&$this, 'comment_form'));
 	}
 
@@ -228,6 +225,9 @@ class jmct_Core
 	function add_config_page()
 	{
 		add_submenu_page('options-general.php', __('Comment Timeout'), __('Comment Timeout'), 'manage_options', 'comment-timeout', array(&$this, 'config_page'));
+		add_action('dbx_post_sidebar', array(&$this, 'post_sidebar'));
+		add_action('dbx_page_sidebar', array(&$this, 'post_sidebar'));
+		add_action('save_post', array(&$this, 'save_post'));
 	}
 
 	/* ====== config_page ====== */
