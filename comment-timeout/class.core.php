@@ -11,11 +11,17 @@ if (!function_exists('wp_die')) {
 
 class jmct_Core
 {
+	/* ====== init ====== */
+	
+	/**
+	 * Initialises the plugin, setting up the required hooks.
+	 */
+
 	public static function init()
 	{
 		$core = new jmct_Core();
 		add_filter('the_posts', array(&$core, 'process_posts'));
-		add_action('admin_menu', array(&$core, 'add_config_page'));
+		add_action('admin_menu', array(&$core, 'init_admin'));
 		// Needs to be called before Akismet
 		add_filter('preprocess_comment', array(&$core, 'preprocess_comment'), 0);
 		add_action('comment_form', array(&$core, 'comment_form'));
@@ -187,89 +193,18 @@ class jmct_Core
 		return $processor->process_comment();
 	}
 
-	/* ====== save_post ====== */
+
+	/* ====== init_admin ====== */
 
 	/**
-	 * Called when a post or page is saved. Updates CT's per-post settings
-	 * from the bit in the sidebar.
+	 * Adds the configuration page to the admin submenu; also initialises the other admin-related hooks.
 	 */
 
-	function save_post($postID)
+	function init_admin()
 	{
-		$this->get_settings();
-		if ($this->settings['AllowOverride']) {
-			switch(@$_POST['CommentTimeout']) {
-				case 'ignore':
-					$setting = 'ignore';
-					break;
-				case 'custom':
-					$setting = (int)$_POST['ctPostAge'] . ',' . (int)$_POST['ctCommentAge'];
-					break;
-				case 'default':
-				default:
-					$setting = false;
-					break;
-			}
-
-			if ($setting !== false) {
-				if (!update_post_meta($postID, '_comment_timeout', $setting)) {
-					add_post_meta($postID, '_comment_timeout', $setting);
-				}
-			}
-			else {
-				delete_post_meta($postID, '_comment_timeout');
-			}
-		}
-	}
-
-	/* ====== add_config_page ====== */
-
-	/**
-	 * Adds the configuration page to the submenu
-	 */
-
-	function add_config_page()
-	{
-		add_submenu_page('options-general.php', __('Comment Timeout'), __('Comment Timeout'), 'manage_options', 'comment-timeout', array(&$this, 'config_page'));
-		add_action('dbx_post_sidebar', array(&$this, 'post_sidebar'));
-		add_action('dbx_page_sidebar', array(&$this, 'post_sidebar'));
-		add_action('save_post', array(&$this, 'save_post'));
-	}
-
-	/* ====== config_page ====== */
-
-	/**
-	 * Loads in and renders the configuration page in the dashboard.
-	 */
-
-	function config_page()
-	{
-		if ('POST' == $_SERVER['REQUEST_METHOD']) {
-			$this->save_settings();
-			echo '<div id="comment-locking-saved" class="updated fade-ffff00"">';
-			echo '<p><strong>';
-			_e('Options saved.');
-			echo '</strong></p></div>';
-		}
-		else {
-			$this->get_settings();
-		}
-		require_once(dirname(__FILE__) . '/form.config.php');
-	}
-
-	/* ====== post_sidebar ====== */
-
-	/**
-	 * Adds an entry to the post's sidebar to allow us to set simple comment
-	 * settings on a post-by-post basis.
-	 */
-
-	function post_sidebar()
-	{
-		$this->get_settings();
-		if ($this->settings['AllowOverride']) {
-			require_once(dirname(__FILE__) . '/form.post.php');
-		}
+		require_once(dirname(__FILE__) . '/class.admin.php');
+		$adm = new jmct_Admin($this);
+		$adm->init();
 	}
 
 
