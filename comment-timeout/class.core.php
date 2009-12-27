@@ -108,6 +108,7 @@ class jmct_Core
 		}
 		$this->sanitize_settings();
 		update_option('jammycakes_comment_locking', $this->settings);
+		return $this->settings;
 	}
 
 

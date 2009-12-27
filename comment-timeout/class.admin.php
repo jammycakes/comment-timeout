@@ -12,7 +12,7 @@ class jmct_Admin
 
 	public function init()
 	{
-		$this->settings = $this->core->get_settings();
+		$this->settings =& $this->core->get_settings();
 		add_submenu_page('options-general.php', __('Comment Timeout'), __('Comment Timeout'), 'manage_options', 'comment-timeout', array(&$this, 'config_page'));
 		if ($this->settings['AllowOverride']) {
 			add_action('dbx_post_sidebar', array(&$this, 'post_sidebar'));
@@ -31,7 +31,7 @@ class jmct_Admin
 	public function config_page()
 	{
 		if ('POST' == $_SERVER['REQUEST_METHOD']) {
-			$this->core->save_settings();
+			$this->settings = $this->core->save_settings();
 			echo '<div id="comment-locking-saved" class="updated fade-ffff00"">';
 			echo '<p><strong>';
 			_e('Options saved.');
