@@ -81,6 +81,7 @@ class jmct_Core
 		return $this->settings;
 	}
 
+
 	/* ====== save_settings ====== */
 
 	/**
@@ -99,6 +100,7 @@ class jmct_Core
 		$this->sanitize_settings();
 		update_option('jammycakes_comment_locking', $this->settings);
 	}
+
 
 	/* ====== sanitize_settings ====== */
 
@@ -168,6 +170,7 @@ class jmct_Core
 		return $processor->process_posts();
 	}
 
+
 	/* ====== preprocess_comment filter ====== */
 
 	/**
@@ -176,36 +179,9 @@ class jmct_Core
 
 	function preprocess_comment($comment)
 	{
-		$this->get_settings();
-		$post = get_post($comment['comment_post_ID']);
-		$post = $this->process_posts($post);
-
-		$now = time();
-		$isPing = ($comment['comment_type'] == 'trackback' || $comment['comment_type'] == 'pingback');
-		$isClosed = $isPing ? ($post->ping_status == 'closed') : ($post->comment_status == 'closed');
-		if ($isPing) {
-			$timedOut = isset($post->cutoff_pings) && ($now > $post->cutoff_pings);
-		}
-		else {
-			$timedOut = isset($post->cutoff_comments) && ($now > $post->cutoff_comments);
-		}
-
-		switch ($this->settings['Mode']) {
-			case 'moderate':
-				if ($timedOut) {
-					// This filter needs to run before the one inserted by Akismet
-					add_filter('pre_comment_approved', create_function('$a', 'return 0;'), 0);
-				}
-				break;
-			case 'close':
-			default:
-				if ($isClosed || $timedOut) {
-					do_action('comment_closed', $comment->comment_post_ID);
-					wp_die('Sorry, comments are closed for this item.');
-				}
-				break;
-		}
-		return $comment;
+		require_once(dirname(__FILE__) . '/class.comment-processor.php');
+		$processor = new jmct_CommentProcessor($this, $comment);
+		return $processor->process_comment();
 	}
 
 	/* ====== save_post ====== */
