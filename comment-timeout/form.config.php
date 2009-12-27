@@ -3,7 +3,7 @@
 	<h2>Comment Timeout</h2>
 
 	<form action="" method="POST" id="comment-timeout-conf">
-
+		<?php if (function_exists('wp_nonce_field')) { wp_nonce_field('comment-timeout-update_settings'); } ?>
 		<table class="form-table">
 			<tr valign="top">
 				<th scope="row">

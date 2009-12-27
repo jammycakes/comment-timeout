@@ -37,6 +37,7 @@ class jmct_Admin
 	public function config_page()
 	{
 		if ('POST' == $_SERVER['REQUEST_METHOD']) {
+			check_admin_referer('comment-timeout-update_settings');
 			$this->settings = $this->core->save_settings();
 			echo '<div id="comment-locking-saved" class="updated fade-ffff00"">';
 			echo '<p><strong>';
