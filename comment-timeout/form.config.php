@@ -76,6 +76,16 @@
 					<br />
 				</td>
 			</tr>
+			<tr valign="top">
+				<th scope="row">Show when comments close:</th>
+				<td>
+					<select id="ctDisplayTimeout" name="DisplayTimeout">
+						<option value="absolute" <?php selected($this->settings['DisplayTimeout'], 'absolute') ?>>as date ("on 24 March 2010")</option>
+						<option value="relative" <?php selected($this->settings['DisplayTimeout'], 'relative') ?>>as time remaining ("in 3 days")</option>
+						<option value="off" <?php selected($this->settings['DisplayTimeout'], 'off') ?>>do not display</option>
+					</select>
+				</td>
+			</tr>
 		</table>
 
 		<p class="submit">

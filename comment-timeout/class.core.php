@@ -16,6 +16,14 @@ class jmct_Core
 	/**
 	 * Initialises the plugin, setting up the required hooks.
 	 */
+	
+	private static $instance;
+
+	public static function get_instance()
+	{
+		return jmct_Core::$instance;
+	}
+
 
 	public static function init()
 	{
@@ -25,6 +33,7 @@ class jmct_Core
 		// Needs to be called before Akismet
 		add_filter('preprocess_comment', array(&$core, 'preprocess_comment'), 0);
 		add_action('comment_form', array(&$core, 'comment_form'));
+		jmct_Core::$instance =& $core;
 	}
 
 
@@ -66,9 +75,11 @@ class jmct_Core
 			// 'independent' of posts, or 'ignore' (false)
 			'DoPings' => 'together',
 			// Whether to apply these rules to pages, images and file uploads
-			'DoPages' => FALSE,
+			'DoPages' => false,
 			// Whether to allow overrides
-			'AllowOverride' => true
+			'AllowOverride' => true,
+			// Whether to display when comments timeout as 'absolute' (default), time remaining 'relative' or 'off'
+			'DisplayTimeout' => 'date'
 		);
 
 		if (!isset($this->settings)) {
@@ -145,6 +156,12 @@ class jmct_Core
 						$this->settings['Mode'] = 'close';
 					}
 					break;
+				case 'DisplayTimeout':
+					$v = (string) $v;
+					if ($v !== 'absolute' && $v !== 'relative' && $v !== 'off') {
+						$this->settings['DisplayTimeout'] = 'absolute';
+					}
+					break;
 				default:
 					unset ($this->settings[$k]);
 			}
@@ -162,7 +179,6 @@ class jmct_Core
 	public function process_posts($posts)
 	{
 		// Check that we have an array of posts
-
 		if (!is_array($posts)) {
 			// Is it a single post? If so, process it as an array of posts
 			if (is_object($posts) && isset($posts->comment_status)) {
@@ -209,39 +225,123 @@ class jmct_Core
 	}
 
 
-	/* ====== comment_form ====== */
-
-	function comment_form()
+	public function render_template_tag($relative, $dateformat = false, $before = '', $after = '', $moderated = '')
 	{
 		global $post;
-		$this->get_settings();
-		if (isset ($post->cutoff_comments)) {
-			$ct = $post->cutoff_comments - time();
-			if ($ct < 0 && $this->settings['Mode'] == 'moderate') {
-				echo '<p class="comment-timeout">Comments will be sent to the moderation queue.</p>';
-			}
-			elseif ($ct >= 0 && $this->settings['Mode'] == 'close') {
-				$ct1 = $post->cutoff_comments + (get_option('gmt_offset') * 3600);
-				echo '<p class="comment-timeout">Comments for this post will be closed ';
-				if ($ct >= 604800) {
-					echo 'on ' . date('j F Y', $ct1);
+		$timeout = get_comment_timeout();
+		if ($timeout === false) {
+			return;
+		}
+		$ct = $post->cutoff_comments - time();
+		if ($ct < 0 && $this->settings['Mode'] == 'moderate') {
+			echo $moderated;
+		}
+		elseif ($ct >= 0 && $this->settings['Mode'] == 'close') {
+			echo $before;
+			if ($relative) {
+				if ($ct >= 63072000) {
+					echo (int)($ct/31536000) . _(' years');
 				}
-				else if ($ct >= 172800) {
-					echo 'in ' . (int) ($ct/86400) . ' days';
+				elseif($ct >= 5184000) {
+					echo (int)($ct/2592000) . _(' months');
+				}
+				elseif($ct >= 1209600) {
+					echo (int)($ct/604800) . _(' weeks');
+				}
+				elseif ($ct >= 172800) {
+					echo (int) ($ct/86400) . _(' days');
 				}
 				else if ($ct >= 7200) {
-					echo 'in ' . (int) ($ct/3600) . ' hours';
+					echo (int) ($ct/3600) . _(' hours');
 				}
 				else if ($ct >= 60) {
-					echo 'in ' . (int) ($ct/60) . ' minutes';
+					echo (int) ($ct/60) . _(' minutes');
 				}
 				else {
-					echo 'within one minute.';
+					echo _('within one minute');
 				}
-				echo '.</p>';
 			}
+			else {
+				$format = $dateformat === false ? get_option('date_format') : $dateformat;
+				echo date($format, get_comment_timeout() + (get_option('gmt_offset') * 3600));
+			}
+			echo $after;
+		}
+	}
+
+	private function render_comment_timeout($relative)
+	{
+		$this->render_template_tag(
+			$relative,
+			false,
+			'<p class="comment-timeout">'
+				. _('Comments will be closed ' . ($relative ? 'in ' : 'on ')),
+			'.</p>',
+			'<p class="comment-timeout">'
+				. _('Comments will be sent to the moderation queue.')
+				. '</p>'
+		);
+	}
+
+
+	/* ====== comment_form ====== */
+
+	public function comment_form()
+	{
+		$settings = $this->get_settings();
+		switch($settings['DisplayTimeout'])  {
+			case 'absolute':
+				$this->render_comment_timeout(false);
+				break;
+			case 'relative':
+				$this->render_comment_timeout(true);
+				break;
 		}
 	}
 }
 
 jmct_Core::init();
+
+
+/* ====== get_comment_timeout ====== */
+
+/**
+ * @returns
+ *     the date and time that the comments for the current post will be cutoff,
+ *     or false if they will remain open indefinitely. Date is returned as a Unix
+ *     timestamp.
+ */
+
+function get_comment_timeout()
+{
+	global $post;
+	if (isset ($post->cutoff_comments)) {
+		return $post->cutoff_comments;
+	}
+	else {
+		return false;
+	}
+}
+
+
+/* ====== the_comment_timeout ====== */
+
+/**
+ * Displays the date and time that the comments for the current post will be cutoff.
+ * @param $relative
+ *     true to display the time in relative format, otherwise false.
+ * @param $dateformat
+ *     The PHP date() format used to print the (absolute) date. If not set,
+ *     use the WordPress default. Ignored if $relative is true.
+ * @param $before
+ *     The HTML to render before the date (absolute or relative).
+ * @param $after
+ *     The HTML to render after the date (absolute or relative).
+ * @param $moderated
+ *     The HTML to render if late comments are being sent to the moderation queue.
+ */
+
+function the_comment_timeout($relative, $dateformat = false, $before = '', $after = '', $moderated = '')
+{
+	jmct_Core::get_instance()->render_template_tag($relative, $dateformat, $before, $after, $moderated);
+}
