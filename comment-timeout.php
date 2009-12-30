@@ -14,5 +14,5 @@ if ((int)phpversion() < 5) {
 	add_action('admin_notices', create_function('', 'echo \'<div class="error"><p>Comment Timeout no longer supports PHP 4. Please upgrade your server to PHP 5.2 or later.</p></div>\';'));
 }
 else {
-	require_once(dirname(__FILE__) . '/class.core.php');
+	require_once(dirname(__FILE__) . '/comment-timeout/class.core.php');
 }
