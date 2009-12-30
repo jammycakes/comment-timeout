@@ -70,7 +70,11 @@ You should contact your theme developer and ask them for a fix.
 
 == Changelog ==
 
-= 2.1 =
+= 2.1.1 =
+
+* Fixed layout of files to make automatic upgrades work properly.
+
+= 2.1.0 =
 
 * Added option to disable or modify the message indicating when comments will time out.
 * Added template tags to allow further customisation in the theme.
