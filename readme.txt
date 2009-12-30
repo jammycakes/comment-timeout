@@ -15,8 +15,7 @@ configurable period of time. It has options which allow you to keep the
 discussion open for longer on older posts which have had recent comments
 accepted, or to override the timeout on a post-by-post basis.
 
-== Upgrade Notice ==
-**PHP 4 is no longer supported.** As of version 2.1, Comment Timeout requires PHP 5.2 or later.
+**Note: PHP 4 is no longer supported.** As of version 2.1, Comment Timeout requires PHP 5.2 or later.
 If you are still using PHP 4, you should use Comment Timeout 2.0.1.
 
 == Installation ==
@@ -26,7 +25,7 @@ If you are still using PHP 4, you should use Comment Timeout 2.0.1.
 * Activate the plugin through the "Plugins" menu in the WordPress dashboard.
 * Configure the plugin by going to the "Comment Timeout" page on the "Options" menu.
 
-= Configuration =
+== Configuration ==
 
 You can change various settings globally on the "Comment Timeout" page under the
 "Options" tab on the WordPress dashboard. Most of the options are fairly
@@ -35,7 +34,7 @@ self-explanatory.
 You can also change options on a per-post basis by looking for the 
 "Comment Timeout" section in the sidebar of the post or page editor.
 
-= Template tags =
+== Template tags ==
 
 Comment Timeout 2.1 introduces two new functions that you can use in your theme:
 
@@ -61,7 +60,7 @@ rather than being rejected outright.
 
 == Frequently Asked Questions ==
 
-= My page layout breaks when comments are closed! =
+**My page layout breaks when comments are closed!**
 
 This is the fault of your theme, not this plugin. Some theme authors do not test
 their themes properly with posts for which comments have been closed.
