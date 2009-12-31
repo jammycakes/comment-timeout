@@ -10,7 +10,7 @@ Author URI: http://www.jamesmckay.net/
 
 define('COMMENT_TIMEOUT_VERSION', '2.1.1');
 
-if ((int)phpversion() < 5) {
+if (version_compare(phpversion(), '5.0', '<')) {
 	add_action('admin_notices', create_function('', 'echo \'<div class="error"><p>Comment Timeout no longer supports PHP 4. Please upgrade your server to PHP 5.2 or later.</p></div>\';'));
 }
 else {
