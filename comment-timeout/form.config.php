@@ -96,7 +96,7 @@
 			Comment Timeout version <?php echo COMMENT_TIMEOUT_VERSION; ?> -
 			Copyright 2007-2010 <a href="http://jamesmckay.net/">James McKay</a>
 			-
-			<a href="http://jamesmckay.net/code/comment-timeout/">Help and FAQ</a>
+			<a href="http://bitbucket.org/jammycakes/comment-timeout/">Help and FAQ</a>
 		</p>
 	</form>
 </div>
