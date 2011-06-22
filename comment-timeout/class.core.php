@@ -178,6 +178,10 @@ class jmct_Core
 
 	public function process_posts($posts)
 	{
+		if (is_admin()) {
+			return $posts;
+		}
+		
 		// Check that we have an array of posts
 		if (!is_array($posts)) {
 			// Is it a single post? If so, process it as an array of posts
