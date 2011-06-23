@@ -104,15 +104,24 @@ class jmct_Core
 		if (FALSE === $this->settings) {
 			$this->settings = $this->defaultSettings;
 			add_option('jammycakes_comment_locking', $this->settings);
+			return $this->settings;
 		}
-		else if (!isset($this->settings['UniqueID'])) {
-			$this->settings = array_merge($this->defaultSettings, $this->settings);
-			update_option('jammycakes_comment_locking', $this->settings);
-		}
-		else {
-			$this->settings = array_merge($this->defaultSettings, $this->settings);
-		}
+
+		$this->settings = array_merge($this->defaultSettings, $this->settings);
 		$this->sanitize_settings();
+		$upgraded = false;
+
+		/* Upgrade the settings from previous versions if necessary */
+
+		if (isset($this->settings['UniqueID'])) {
+			// CT 1.3 - need to sanitise and update
+			$upgraded = true;
+		}
+
+		if ($upgraded) {
+			$this->save_settings();
+		}
+
 		return $this->settings;
 	}
 
