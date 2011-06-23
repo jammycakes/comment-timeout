@@ -117,6 +117,20 @@ class jmct_Core
 	}
 
 
+	/* ====== save_settings ====== */
+
+	/**
+	 * Saves the settings back to WordPress, without pre-processing.
+	 */
+
+	private function save_settings()
+	{
+		update_option('jammycakes_comment_locking', $this->settings);
+		update_option('close_comments_for_old_posts', $this->wp_active);
+		update_option('close_comments_days_old', $this->wp_timeout);
+	}
+
+
 	/* ====== save_settings_from_postback ====== */
 
 	/**
@@ -133,9 +147,7 @@ class jmct_Core
 			$this->settings[$k] = $_POST[$k];
 		}
 		$this->sanitize_settings();
-		update_option('jammycakes_comment_locking', $this->settings);
-		update_option('close_comments_for_old_posts', $this->wp_active);
-		update_option('close_comments_days_old', $this->wp_timeout);
+		$this->save_settings();
 		return $this->settings;
 	}
 
