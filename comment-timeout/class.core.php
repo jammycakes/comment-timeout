@@ -117,13 +117,13 @@ class jmct_Core
 	}
 
 
-	/* ====== save_settings ====== */
+	/* ====== save_settings_from_postback ====== */
 
 	/**
-	 * Saves the settings
+	 * Updates the settings from the admin page postback, and saves them.
 	 */
 
-	public function save_settings()
+	public function save_settings_from_postback()
 	{
 		$this->get_settings();
 
