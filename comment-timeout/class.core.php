@@ -27,6 +27,14 @@ class jmct_Core
 
 	public static function init()
 	{
+		/*
+		 * Remove the default WordPress comment closing functionality
+		 * since it interferes with ours.
+		 */
+		remove_filter('the_posts',     '_close_comments_for_old_posts');
+		remove_filter('comments_open', '_close_comments_for_old_post', 10, 2);
+		remove_filter('pings_open',    '_close_comments_for_old_post', 10, 2);
+
 		$core = new jmct_Core();
 		add_filter('the_posts', array(&$core, 'process_posts'));
 		add_action('admin_menu', array(&$core, 'init_admin'));
