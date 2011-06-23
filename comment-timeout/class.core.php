@@ -62,10 +62,14 @@ class jmct_Core
 
 	/**
 	 * Retrieves the settings from the WordPress settings database.
+	 * This method may be called more than once.
+	 * @return The settings.
 	 */
 
 	public function get_settings()
 	{
+		if (isset($this->settings)) return $this->settings;
+
 		/*
 		 * Get the WordPress native default comment closing settings.
 		 */
@@ -96,22 +100,19 @@ class jmct_Core
 			'DisplayTimeout' => 'date'
 		);
 
-		if (!isset($this->settings)) {
-
-			$this->settings = get_option('jammycakes_comment_locking');
-			if (FALSE === $this->settings) {
-				$this->settings = $this->defaultSettings;
-				add_option('jammycakes_comment_locking', $this->settings);
-			}
-			else if (!isset($this->settings['UniqueID'])) {
-				$this->settings = array_merge($this->defaultSettings, $this->settings);
-				update_option('jammycakes_comment_locking', $this->settings);
-			}
-			else {
-				$this->settings = array_merge($this->defaultSettings, $this->settings);
-			}
-			$this->sanitize_settings();
+		$this->settings = get_option('jammycakes_comment_locking');
+		if (FALSE === $this->settings) {
+			$this->settings = $this->defaultSettings;
+			add_option('jammycakes_comment_locking', $this->settings);
 		}
+		else if (!isset($this->settings['UniqueID'])) {
+			$this->settings = array_merge($this->defaultSettings, $this->settings);
+			update_option('jammycakes_comment_locking', $this->settings);
+		}
+		else {
+			$this->settings = array_merge($this->defaultSettings, $this->settings);
+		}
+		$this->sanitize_settings();
 		return $this->settings;
 	}
 
