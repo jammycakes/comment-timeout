@@ -2,9 +2,9 @@
 Contributors: jammycakes
 Donate link: http://bitbucket.org/jammycakes/comment-timeout/
 Tags: comments, spam
-Requires at least: 2.0
+Requires at least: 2.8
 Tested up to: 3.1
-Stable tag: 2.1.2
+Stable tag: 2.2.0
 
 Closes comments on blog entries after a user-configurable period of time, with an option to make allowances for active discussions.
 
@@ -69,6 +69,13 @@ See [this blog post](http://jamesmckay.net/2008/07/comment-timeout-and-faulty-wo
 You should contact your theme developer and ask them for a fix.
 
 == Changelog ==
+
+= 2.2.0 =
+
+* Comment Timeout now integrates with WordPress's built in comment closing feature. Enabling
+  or disabling comments through the "Discussion" tab will be reflected in Comment Timeout.
+* Old versions of WordPress (prior to 2.8) are no longer supported.
+
 
 = 2.1.2 =
 
