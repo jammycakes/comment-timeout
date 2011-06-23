@@ -79,8 +79,6 @@ class jmct_Core
 		// Defaults for the settings
 
 		$this->defaultSettings = array(
-			// Number of days from posting before post is stale
-			'PostAge' => 120,
 			// Number of days from last comment before post is stale
 			'CommentAge' => 60,
 			// Number of days from last comment before popular post is stale
@@ -115,6 +113,14 @@ class jmct_Core
 
 		if (isset($this->settings['UniqueID'])) {
 			// CT 1.3 - need to sanitise and update
+			$upgraded = true;
+		}
+
+		if (isset($this->settings['PostAge'])) {
+			// CT 2.1 or earlier - PostAge is deprecated and should be moved into WP native
+			$this->wp_active = true;
+			$this->wp_timeout = $this->settings['PostAge'];
+			unset($this->settings['PostAge']);
 			$upgraded = true;
 		}
 
@@ -155,6 +161,8 @@ class jmct_Core
 		foreach ($this->defaultSettings as $k=>$v) {
 			$this->settings[$k] = $_POST[$k];
 		}
+		$this->wp_active = (bool)$_POST['Active'];
+		$this->wp_timeout = (int)$_POST['PostAge'];
 		$this->sanitize_settings();
 		$this->save_settings();
 		return $this->settings;
@@ -173,7 +181,6 @@ class jmct_Core
 		foreach (array_keys($this->settings) as $k) { // iterator safe
 			$v = $this->settings[$k];
 			switch ($k) {
-				case 'PostAge':
 				case 'CommentAge':
 				case 'CommentAgePopular':
 				case 'PopularityThreshold':

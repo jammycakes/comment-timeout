@@ -2,7 +2,7 @@
 	global $post_ID;
 	$setting = get_post_meta($post_ID, '_comment_timeout', true);
 	$radio = array();
-	$ctPostAge = $this->settings['PostAge'];
+	$ctPostAge = $this->core->wp_timeout;
 	$ctCommentAge = $this->settings['CommentAge'];
 	if ($setting == 'ignore') {
 		$radio['ignore'] = ' checked="checked"';

@@ -6,11 +6,20 @@
 		<?php if (function_exists('wp_nonce_field')) { wp_nonce_field('comment-timeout-update_settings'); } ?>
 		<table class="form-table">
 			<tr valign="top">
+				<th scope="row">Comment closing:</th>
+				<td>
+					<input type="checkbox" name="Active" id="ctActive" value="true" <?php checked($this->core->wp_active, true); ?> />
+					<label for="ctActive">Close comments on old posts</label>
+				</td>
+			</tr>
+
+			
+			<tr valign="top">
 				<th scope="row">
 					<label for="ctPostAge">Allow comments on posts less than:</label>
 				</th>
 				<td>
-					<input id="ctPostAge" name="PostAge" size="6" value="<?php echo $this->settings['PostAge']; ?>" />
+					<input id="ctPostAge" name="PostAge" size="6" value="<?php echo $this->core->wp_timeout; ?>" />
 					days old
 				</td>
 			</tr>
