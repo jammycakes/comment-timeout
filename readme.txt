@@ -70,6 +70,12 @@ You should contact your theme developer and ask them for a fix.
 
 == Changelog ==
 
+= 2.1.2 =
+
+* Fixed: "allow comments" and "allow pings" options were being disabled when old posts were
+  edited using Quick Edit. See [this issue](https://bitbucket.org/jammycakes/comment-timeout/issue/1/editing-a-post-where-comments-are-auto)
+* The home page for Comment Timeout is now [the Bitbucket repository](https://bitbucket.org/jammycakes/comment-timeout/)
+
 = 2.1.1 =
 
 * Fixed layout of files to make automatic upgrades work properly.
