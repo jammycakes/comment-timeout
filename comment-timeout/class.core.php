@@ -66,6 +66,12 @@ class jmct_Core
 
 	public function get_settings()
 	{
+		/*
+		 * Get the WordPress native default comment closing settings.
+		 */
+		$this->wp_active = (bool)get_option('close_comments_for_old_posts');
+		$this->wp_timeout = (int)get_option('close_comments_days_old');
+
 		// Defaults for the settings
 
 		$this->defaultSettings = array(
@@ -127,6 +133,8 @@ class jmct_Core
 		}
 		$this->sanitize_settings();
 		update_option('jammycakes_comment_locking', $this->settings);
+		update_option('close_comments_for_old_posts', $this->wp_active);
+		update_option('close_comments_days_old', $this->wp_timeout);
 		return $this->settings;
 	}
 
