@@ -10,10 +10,9 @@ Closes comments on blog entries after a user-configurable period of time, with a
 
 == Description ==
 
-This plugin automatically closes comments on blog entries after a user-
-configurable period of time. It has options which allow you to keep the
-discussion open for longer on older posts which have had recent comments
-accepted, or to override the timeout on a post-by-post basis.
+This plugin extends the comment closing functionality in WordPress to allow
+you to extend the discussion time when older posts have recent comments
+accepted, or to override the comment closing time on a post by post basis.
 
 **Note: PHP 4 is no longer supported.** As of version 2.1, Comment Timeout requires PHP 5.2 or later.
 If you are still using PHP 4, you should use Comment Timeout 2.0.1.
