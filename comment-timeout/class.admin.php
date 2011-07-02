@@ -31,20 +31,41 @@ class jmct_Admin
 	/* ====== config_page ====== */
 
 	/**
-	 * Loads in and renders the configuration page in the dashboard.
+	 * Loads in and renders the configuration page in the dashboard, executing any commands that
+	 * have been posted back.
+	 * @remarks
+	 *  Commands are implemented as methods of this class. They must have a "@command" doc
+	 *  comment to verify that they are indeed commands.
 	 */
 
 	public function config_page()
 	{
 		if ('POST' == $_SERVER['REQUEST_METHOD']) {
-			check_admin_referer('comment-timeout-update_settings');
-			$this->settings = $this->core->save_settings_from_postback();
-			echo '<div id="comment-locking-saved" class="updated fade-ffff00"">';
-			echo '<p><strong>';
-			_e('Options saved.');
-			echo '</strong></p></div>';
+			$cmd = $_POST['command'];
+			if (method_exists(&$this, $cmd)) {
+				check_admin_referer('comment-timeout-' . $cmd);
+				$method = new ReflectionMethod('jmct_Admin', $cmd);
+				$comment = $method->getDocComment();
+				if (preg_match('/^\\s*\\*\\s*@command\\b/im', $comment)) {
+					$method->invoke(&$this);
+				}
+			}
 		}
 		require_once(dirname(__FILE__) . '/form.config.php');
+	}
+
+
+	/**
+	 * @command
+	 */
+
+	public function update_settings()
+	{
+		$this->settings = $this->core->save_settings_from_postback();
+		echo '<div id="comment-locking-saved" class="updated fade-ffff00"">';
+		echo '<p><strong>';
+		_e('Options saved.');
+		echo '</strong></p></div>';
 	}
 
 
