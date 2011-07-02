@@ -106,7 +106,6 @@ class jmct_Core
 		}
 
 		$this->settings = array_merge($this->defaultSettings, $this->settings);
-		$this->sanitize_settings();
 		$upgraded = false;
 
 		/* Upgrade the settings from previous versions if necessary */
@@ -124,6 +123,7 @@ class jmct_Core
 			$upgraded = true;
 		}
 
+		$this->sanitize_settings();
 		if ($upgraded) {
 			$this->save_settings();
 		}
