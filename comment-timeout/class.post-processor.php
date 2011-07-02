@@ -63,6 +63,9 @@ class jmct_PostProcessor
 
 	public function process_posts()
 	{
+		// Precondition: if comment closing is inactive and we are not allowing overrides, bail out.
+		if ((!$this->core->wp_active) && (!$this->settings['AllowOverride']))
+			return $this->posts;
 
 		$minID = $maxID = 0;
 		foreach ($this->posts as $p) {
@@ -109,20 +112,6 @@ class jmct_PostProcessor
 				&& ($p->post_type == '' || $p->post_type == 'post');
 
 			/*
-			 * Preconditions: skip if any of the following are true:
-			 */
-			// 1. Is a non-post and we are only checking posts
-			if (!($isPost || $this->settings['DoPages'])) continue;
-			// 2. Is flagged for ignore and we are allowing overrides
-			if (@$cm->comment_timeout == 'ignore' && $this->settings['AllowOverride']) continue;
-			// 3. The plugin is inactive, and either
-			//    (a) we are not allowing overrides, or
-			//    (b) the post is flagged for ignore 
-			if ((!$this->core->wp_active) &&
-				(@$cm->comment_timeout == 'ignore' || !$this->settings['AllowOverride']))
-				continue;
-
-			/*
 			 * Per-post settings are stored in a post meta field called
 			 * _comment_timeout. This can have one of three values:
 			 * "ignore" means we don't close comments
@@ -132,6 +121,14 @@ class jmct_PostProcessor
 			 *   the last comment respectively
 			 */
 
+			/*
+			 * Preconditions: skip if either of the following are true:
+			 */
+			// 1. Is a non-post and we are only checking posts
+			if (!($isPost || $this->settings['DoPages'])) continue;
+			// 2. Post is configured for ignore and we are allowing overrides
+			if (@$cm->comment_timeout == 'ignore' && $this->settings['AllowOverride']) continue;
+
 			if (@preg_match('|^(\d+),(\d+)$|', $cm->comment_timeout, $matches)) {
 				list($dummy, $postAge, $commentAge) = $matches;
 				$commentAgePopular = $commentAge;
@@ -139,6 +136,9 @@ class jmct_PostProcessor
 			}
 			else {
 				// These are the global settings
+				// Final precondition: if closing is inactive, don't close comments by default.
+				if (!$this->core->wp_active)
+					continue;
 				$postAge = $this->core->wp_timeout;
 				$commentAge = $this->settings['CommentAge'];
 				$commentAgePopular = $this->settings['CommentAgePopular'];
