@@ -4,6 +4,7 @@
 
 	<form action="" method="POST" id="comment-timeout-conf">
 		<?php if (function_exists('wp_nonce_field')) { wp_nonce_field('comment-timeout-update_settings'); } ?>
+		<input type="hidden" name="command" value="update_settings" />
 		<table class="form-table">
 			<tr valign="top">
 				<th scope="row">Comment closing:</th>
@@ -100,12 +101,35 @@
 		<p class="submit">
 			<input type="submit" name="Submit" value="Update Options &raquo;" />
 		</p>
+	</form>
 
-		<p style="text-align:center">
-			Comment Timeout version <?php echo COMMENT_TIMEOUT_VERSION; ?> -
-			Copyright 2007-2010 <a href="http://jamesmckay.net/">James McKay</a>
-			-
-			<a href="http://bitbucket.org/jammycakes/comment-timeout/">Help and FAQ</a>
+	<form method="POST" action="" id="comment-timeout-reset">
+		<script type="text/javascript">
+			function confirm_timeout_reset() {
+				return window.confirm(
+					"Are you sure you want to reset all posts and pages to their default "+
+					"settings? This action can not be undone."
+				);
+			}
+		</script>
+		<?php if (function_exists('wp_nonce_field')) { wp_nonce_field('comment-timeout-reset'); } ?>
+		<input type="hidden" name="command" value="reset" />
+		<h3>Reset per-post settings</h3>
+		<p>
+			This will reset all your per-post comment settings to the defaults for new
+			posts. All posts, pages and other types will be affected.
+		</p>
+		<p class="submit">
+			<input type="submit"
+				value="Reset per-page settings &raquo;"
+				onclick="return confirm_timeout_reset()" />
 		</p>
 	</form>
+
+	<p style="text-align:center">
+		Comment Timeout version <?php echo COMMENT_TIMEOUT_VERSION; ?> -
+		Copyright 2007-2011 <a href="http://jamesmckay.net/">James McKay</a>
+		-
+		<a href="http://bitbucket.org/jammycakes/comment-timeout/">Help and FAQ</a>
+	</p>
 </div>
