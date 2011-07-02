@@ -1,0 +1,6 @@
+.hg
+.hgignore
+.hgtags
+.svnignore
+build
+*.bat
