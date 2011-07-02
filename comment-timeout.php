@@ -10,7 +10,7 @@ Author URI: http://jamesmckay.net/
 
 define('COMMENT_TIMEOUT_VERSION', '2.3.0');
 
-if (version_compare(phpversion(), '5.0', '<')) {
+if (version_compare(phpversion(), '5.2', '<')) {
 	add_action('admin_notices',
 		create_function('', 
 			'echo \'<div class="error">' +
