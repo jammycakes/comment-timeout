@@ -54,7 +54,8 @@ class jmct_Admin
 		require_once(dirname(__FILE__) . '/form.config.php');
 	}
 
-
+	/* ====== update_settings command ====== */
+	
 	/**
 	 * @command
 	 */
@@ -69,6 +70,29 @@ class jmct_Admin
 	}
 
 
+	/* ====== reset command ====== */
+
+	/**
+	 * @command
+	 */
+
+	public function reset()
+	{
+		global $wpdb;
+
+		$sql1 = "delete from $wpdb->postmeta where meta_key='_comment_timeout' ;";
+		$sql2 = $wpdb->prepare("update $wpdb->posts set comment_status=%s, ping_status=%s ;",
+			get_option('default_comment_status'),
+			get_option('default_ping_status')
+		);
+		$wpdb->query($sql1);
+		$wpdb->query($sql2);
+
+		echo '<div id="comment-locking-saved" class="updated fade-ffff00"">';
+		echo '<p><strong>';
+		_e('Comment timeout settings on all posts have been reset to their original state.');
+		echo '</strong></p></div>';
+	}
 	/* ====== save_post ====== */
 
 	/**
