@@ -30,7 +30,7 @@ You can change various settings globally on the "Comment Timeout" page under the
 "Options" tab on the WordPress dashboard. Most of the options are fairly
 self-explanatory.
 
-You can also change options on a per-post basis by looking for the 
+You can also change options on a per-post basis by looking for the
 "Comment Timeout" section in the sidebar of the post or page editor.
 
 == Template tags ==
@@ -109,7 +109,7 @@ You should contact your theme developer and ask them for a fix.
   * Redesigned admin page.
   * Comments on old posts can be sent to the moderation queue instead of being blocked.
 
-== Development and reporting bugs == 
+== Development and reporting bugs ==
 
 When reporting bugs, please provide me with the following information:
 
@@ -142,7 +142,7 @@ The above copyright notice and this permission notice shall be included in
 all copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,

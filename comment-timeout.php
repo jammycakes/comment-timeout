@@ -12,7 +12,7 @@ define('COMMENT_TIMEOUT_VERSION', '2.3.0');
 
 if (version_compare(phpversion(), '5.2', '<')) {
 	add_action('admin_notices',
-		create_function('', 
+		create_function('',
 			'echo \'<div class="error">' +
 			'<p>Comment Timeout no longer supports PHP 4. ' +
 			'Please upgrade your server to PHP 5.2 or later.</p></div>\';'

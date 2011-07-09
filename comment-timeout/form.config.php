@@ -14,7 +14,7 @@
 				</td>
 			</tr>
 
-			
+
 			<tr valign="top">
 				<th scope="row">
 					<label for="ctPostAge">Allow comments on posts less than:</label>
@@ -129,7 +129,7 @@
 
 		<p class="submit">
 			<input type="submit"
-				value="Reset per-page settings &raquo;"
+				value="Reset per-post settings &raquo;"
 				onclick="return confirm_timeout_reset()" />
 		</p>
 	</form>

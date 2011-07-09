@@ -12,11 +12,11 @@ if (!function_exists('wp_die')) {
 class jmct_Core
 {
 	/* ====== init ====== */
-	
+
 	/**
 	 * Initialises the plugin, setting up the required hooks.
 	 */
-	
+
 	private static $instance;
 
 	public static function get_instance()
@@ -226,7 +226,7 @@ class jmct_Core
 		if (is_admin()) {
 			return $posts;
 		}
-		
+
 		// Check that we have an array of posts
 		if (!is_array($posts)) {
 			// Is it a single post? If so, process it as an array of posts
