@@ -69,6 +69,10 @@ You should contact your theme developer and ask them for a fix.
 
 == Changelog ==
 
+= 2.3.0 =
+
+* Added an option to allow users to reset all per-post settings to their defaults.
+
 = 2.2.0 =
 
 * Comment Timeout now integrates with WordPress's built in comment closing feature. Enabling
