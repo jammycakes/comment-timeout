@@ -89,7 +89,7 @@ class jmct_Admin
 
 		if (!$reset_all) {
 			$sql1 .= " and pm.post_id in (select id from $wpdb->posts where post_type = 'post')";
-			$sql1 .= " and post_type = 'post'";
+			$sql2 .= " and post_type = 'post'";
 		}
 
 		$wpdb->query($sql1);
