@@ -117,8 +117,16 @@
 		<h3>Reset per-post settings</h3>
 		<p>
 			This will reset all your per-post comment settings to the defaults for new
-			posts. All posts, pages and other types will be affected.
+			posts.
 		</p>
+
+		<p>
+			<input type="checkbox" name="Active" id="rpDoPages" value="true" />
+			<label for="rpDoPages">
+				Reset settings for pages, images and files as well as posts.
+			</label>
+		</p>
+
 		<p class="submit">
 			<input type="submit"
 				value="Reset per-page settings &raquo;"

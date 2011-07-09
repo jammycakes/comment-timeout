@@ -55,7 +55,7 @@ class jmct_Admin
 	}
 
 	/* ====== update_settings command ====== */
-	
+
 	/**
 	 * @command
 	 */
@@ -80,11 +80,18 @@ class jmct_Admin
 	{
 		global $wpdb;
 
-		$sql1 = "delete from $wpdb->postmeta where meta_key='_comment_timeout' ;";
-		$sql2 = $wpdb->prepare("update $wpdb->posts set comment_status=%s, ping_status=%s ;",
+		$reset_all = (bool)$_POST['rpDoPages'];
+		$sql1 = "delete from $wpdb->postmeta pm where pm.meta_key='_comment_timeout'";
+		$sql2 = $wpdb->prepare("update $wpdb->posts set comment_status=%s, ping_status=%s",
 			get_option('default_comment_status'),
 			get_option('default_ping_status')
 		);
+
+		if (!$reset_all) {
+			$sql1 .= " and pm.post_id in (select id from $wpdb->posts where post_type = 'post')";
+			$sql1 .= " and post_type = 'post'";
+		}
+
 		$wpdb->query($sql1);
 		$wpdb->query($sql2);
 
