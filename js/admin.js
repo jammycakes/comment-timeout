@@ -4,3 +4,21 @@ function confirm_timeout_reset() {
 		"settings? This action can not be undone."
 	);
 }
+
+jQuery(function() {
+	var ctActive = document.getElementById('ctActive');
+	var tbSettings = document.getElementById('tbSettings');
+
+	function enableDisableControls() {
+		if (ctActive.checked) {
+			jQuery(tbSettings).slideDown();
+		}
+		else {
+			jQuery(tbSettings).slideUp();
+		}
+	}
+
+	jQuery(ctActive).change(enableDisableControls);
+	if (!ctActive.checked) 
+		jQuery(tbSettings).hide();
+});
