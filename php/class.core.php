@@ -37,7 +37,7 @@ class jmct_Core
 
 		$core = new jmct_Core();
 		add_filter('the_posts', array(&$core, 'process_posts'));
-		add_action('admin_menu', array(&$core, 'init_admin'));
+		add_action('admin_menu', array(&$core, 'admin_menu'));
 		// Needs to be called before Akismet
 		add_filter('preprocess_comment', array(&$core, 'preprocess_comment'), 0);
 		add_action('comment_form', array(&$core, 'comment_form'));
@@ -260,13 +260,13 @@ class jmct_Core
 	}
 
 
-	/* ====== init_admin ====== */
+	/* ====== admin_menu ====== */
 
 	/**
 	 * Adds the configuration page to the admin submenu; also initialises the other admin-related hooks.
 	 */
 
-	function init_admin()
+	function admin_menu()
 	{
 		require_once(dirname(__FILE__) . '/class.admin.php');
 		$adm = new jmct_Admin($this);
