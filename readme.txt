@@ -3,8 +3,8 @@ Contributors: jammycakes
 Donate link: http://bitbucket.org/jammycakes/comment-timeout/
 Tags: comments, spam
 Requires at least: 2.8
-Tested up to: 3.1
-Stable tag: 2.3.0
+Tested up to: 3.2
+Stable tag: 2.4.0
 
 Closes comments on blog entries after a user-configurable period of time, with an option to make allowances for active discussions.
 
@@ -68,6 +68,13 @@ See [this blog post](http://jamesmckay.net/2008/07/comment-timeout-and-faulty-wo
 You should contact your theme developer and ask them for a fix.
 
 == Changelog ==
+
+= 2.4.0 =
+
+* You can now optionally specify a date on which to close comments across the board, and then
+  to re-open them at a later date. This is useful if you are going on holiday, for example, or
+  if you want to take an indefinite break from blogging.
+* Timeout options are now hidden on the admin page when "Close comments" is deselected.
 
 = 2.3.0 =
 
