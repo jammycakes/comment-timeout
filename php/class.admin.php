@@ -13,11 +13,16 @@ class jmct_Admin
 	public function init()
 	{
 		$this->settings =& $this->core->get_settings();
-		$page = add_submenu_page('options-general.php', __('Comment Timeout'), __('Comment Timeout'), 'manage_options', 'comment-timeout', array(&$this, 'config_page'));
+		$page = add_submenu_page('options-general.php',
+			__('Comment Timeout'), __('Comment Timeout'),
+			'manage_options', 'comment-timeout',
+			array(&$this, 'config_page'));
 		if ($this->settings['AllowOverride']) {
 			if (function_exists('add_meta_box')) {
-				add_meta_box('comment-timeout', __('Comment Timeout'), array(&$this, 'post_custombox'), 'post', 'normal');
-				add_meta_box('comment-timeout', __('Comment Timeout'), array(&$this, 'post_custombox'), 'page', 'normal');
+				add_meta_box('comment-timeout', __('Comment Timeout'),
+					array(&$this, 'post_custombox'), 'post', 'normal');
+				add_meta_box('comment-timeout', __('Comment Timeout'),
+					array(&$this, 'post_custombox'), 'page', 'normal');
 			}
 			else {
 				add_action('dbx_post_sidebar', array(&$this, 'post_sidebar'));
@@ -98,7 +103,8 @@ class jmct_Admin
 		);
 
 		if (!$reset_all) {
-			$sql1 .= " and pm.post_id in (select id from $wpdb->posts where post_type = 'post')";
+			$sql1 .= " and pm.post_id in " .
+				"(select id from $wpdb->posts where post_type = 'post')";
 			$sql2 .= " and post_type = 'post'";
 		}
 

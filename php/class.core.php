@@ -95,7 +95,8 @@ class jmct_Core
 			'DoPages' => false,
 			// Whether to allow overrides
 			'AllowOverride' => true,
-			// Whether to display when comments timeout as 'absolute' (default), time remaining 'relative' or 'off'
+			// Whether to display when comments timeout as 'absolute' (default),
+			// time remaining 'relative' or 'off'
 			'DisplayTimeout' => 'date'
 		);
 
@@ -280,7 +281,8 @@ class jmct_Core
 	/* ====== admin_menu ====== */
 
 	/**
-	 * Adds the configuration page to the admin submenu; also initialises the other admin-related hooks.
+	 * Adds the configuration page to the admin submenu;
+	 * also initialises the other admin-related hooks.
 	 */
 
 	function admin_menu()
@@ -291,7 +293,8 @@ class jmct_Core
 	}
 
 
-	public function render_template_tag($relative, $dateformat = false, $before = '', $after = '', $moderated = '')
+	public function render_template_tag
+		($relative, $dateformat = false, $before = '', $after = '', $moderated = '')
 	{
 		global $post;
 		$timeout = get_comment_timeout();
@@ -407,7 +410,9 @@ function get_comment_timeout()
  *     The HTML to render if late comments are being sent to the moderation queue.
  */
 
-function the_comment_timeout($relative, $dateformat = false, $before = '', $after = '', $moderated = '')
+function the_comment_timeout
+	($relative, $dateformat = false, $before = '', $after = '', $moderated = '')
 {
-	jmct_Core::get_instance()->render_template_tag($relative, $dateformat, $before, $after, $moderated);
+	jmct_Core::get_instance()->render_template_tag
+		($relative, $dateformat, $before, $after, $moderated);
 }

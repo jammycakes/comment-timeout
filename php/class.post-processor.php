@@ -41,7 +41,8 @@ class jmct_PostProcessor
 				break;
 		}
 		if ($overrides) {
-			$sql .= "left join $wpdb->postmeta pm on p.ID=pm.post_id and pm.meta_key='_comment_timeout' ";
+			$sql .= "left join $wpdb->postmeta pm " .
+				"on p.ID=pm.post_id and pm.meta_key='_comment_timeout' ";
 		}
 		$sql .= 'where p.ID>=' . (int) $first . ' and p.ID<=' . (int) $last .
 			' group by p.ID';
@@ -63,7 +64,8 @@ class jmct_PostProcessor
 
 	public function process_posts()
 	{
-		// Precondition: if comment closing is inactive and we are not allowing overrides, bail out.
+		// Precondition: if comment closing is inactive and we are not allowing overrides,
+		// bail out.
 		if ((!$this->core->wp_active) && (!$this->settings['AllowOverride']))
 			return $this->posts;
 

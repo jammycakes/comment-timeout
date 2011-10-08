@@ -21,8 +21,11 @@ class jmct_CommentProcessor
 		$post = $this->core->process_posts($post);
 
 		$now = time();
-		$isPing = ($this->comment['comment_type'] == 'trackback' || $this->comment['comment_type'] == 'pingback');
-		$isClosed = $isPing ? ($post->ping_status == 'closed') : ($post->comment_status == 'closed');
+		$isPing = ($this->comment['comment_type'] == 'trackback'
+			|| $this->comment['comment_type'] == 'pingback');
+		$isClosed = $isPing 
+			? ($post->ping_status == 'closed')
+			: ($post->comment_status == 'closed');
 		if ($isPing) {
 			$timedOut = isset($post->cutoff_pings) && ($now > $post->cutoff_pings);
 		}
