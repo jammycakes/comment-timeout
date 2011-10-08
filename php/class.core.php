@@ -37,6 +37,7 @@ class jmct_Core
 
 		$core = new jmct_Core();
 		add_filter('the_posts', array(&$core, 'process_posts'));
+		add_action('admin_init', array(&$core, 'admin_init'));
 		add_action('admin_menu', array(&$core, 'admin_menu'));
 		// Needs to be called before Akismet
 		add_filter('preprocess_comment', array(&$core, 'preprocess_comment'), 0);
@@ -259,6 +260,22 @@ class jmct_Core
 		return $processor->process_comment();
 	}
 
+
+	/* ====== admin_init ====== */
+	
+	/**
+	 * Initialises the admin section
+	 */
+	
+	function admin_init()
+	{
+		wp_register_script(
+			'comment-timeout-admin',
+			plugins_url('/js/admin.js', dirname(__FILE__)),
+			'jquery',
+			COMMENT_TIMEOUT_VERSION
+		);
+	}
 
 	/* ====== admin_menu ====== */
 

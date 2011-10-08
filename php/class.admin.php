@@ -13,7 +13,7 @@ class jmct_Admin
 	public function init()
 	{
 		$this->settings =& $this->core->get_settings();
-		add_submenu_page('options-general.php', __('Comment Timeout'), __('Comment Timeout'), 'manage_options', 'comment-timeout', array(&$this, 'config_page'));
+		$page = add_submenu_page('options-general.php', __('Comment Timeout'), __('Comment Timeout'), 'manage_options', 'comment-timeout', array(&$this, 'config_page'));
 		if ($this->settings['AllowOverride']) {
 			if (function_exists('add_meta_box')) {
 				add_meta_box('comment-timeout', __('Comment Timeout'), array(&$this, 'post_custombox'), 'post', 'normal');
@@ -25,8 +25,18 @@ class jmct_Admin
 			}
 			add_action('save_post', array(&$this, 'save_post'));
 		}
+		add_action('admin_print_styles-' . $page, array(&$this, 'admin_print_styles'));
 	}
 
+	/* ====== admin_print_styles ====== */
+	
+	/**
+	 * Enqueues the scripts that we'll be using.
+	 */
+
+	function admin_print_styles() {
+		wp_enqueue_script('comment-timeout-admin');
+	}
 
 	/* ====== config_page ====== */
 
