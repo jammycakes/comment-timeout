@@ -20,5 +20,5 @@ if (version_compare(phpversion(), '5.2', '<')) {
 	);
 }
 else {
-	require_once(dirname(__FILE__) . '/comment-timeout/class.core.php');
+	require_once(dirname(__FILE__) . '/php/class.core.php');
 }
