@@ -104,14 +104,6 @@
 	</form>
 
 	<form method="POST" action="" id="comment-timeout-reset">
-		<script type="text/javascript">
-			function confirm_timeout_reset() {
-				return window.confirm(
-					"Are you sure you want to reset all posts and pages to their default "+
-					"settings? This action can not be undone."
-				);
-			}
-		</script>
 		<?php if (function_exists('wp_nonce_field')) { wp_nonce_field('comment-timeout-reset'); } ?>
 		<input type="hidden" name="command" value="reset" />
 		<h3>Reset per-post settings</h3>
