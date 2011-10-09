@@ -131,18 +131,35 @@
 					</td>
 				</tr>
 			</table>
+
+			<h3>Global timeout options</h3>
+
+			<table class="form-table">
+				<tr valign="top">
+					<th scope="row">Close all comments after:</th>
+					<td>
+						<input id="ctGlobalClose" name="GlobalClose" size="16"
+							value="<?php
+								if ($this->settings['GlobalClose'])
+									echo date('d/m/Y H:i', $this->settings['GlobalClose']);
+							?>" />
+							DD/MM/YYYY hh:mm
+							(leave blank if not required; 12:00 assumed if time not specified)
+					</td>
+				</tr>
+				<tr valign="top">
+					<th scope="row">Re-open comments after:</th>
+					<td>
+						<input id="ctGlobalReopen" name="GlobalReopen" size="16"
+							value="<?php
+								if ($this->settings['GlobalReopen'])
+								echo date('d/m/Y H:i', $this->settings['GlobalReopen']);
+							?>" />
+					</td>
+				</tr>
+			</table>
+
 		</div>
-
-		<h3>Global timeout options</h3>
-
-		<table class="form-table">
-			<tr valign="top">
-				<th scope="row">Global timeout:</th>
-				<td>
-					
-				</td>
-			</tr>
-		</table>
 
 		<p class="submit">
 			<input type="submit" name="Submit" value="Update Options &raquo;" />

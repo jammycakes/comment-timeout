@@ -97,7 +97,11 @@ class jmct_Core
 			'AllowOverride' => true,
 			// Whether to display when comments timeout as 'absolute' (default),
 			// time remaining 'relative' or 'off'
-			'DisplayTimeout' => 'date'
+			'DisplayTimeout' => 'date',
+			// Date to time out across the board. 0 for none.
+			'GlobalClose' => 0,
+			// Date to re-open comments across the board. 0 for none.
+			'GlobalReopen' => 0
 		);
 
 		$this->settings = get_option('jammycakes_comment_locking');
@@ -170,6 +174,36 @@ class jmct_Core
 		return $this->settings;
 	}
 
+	/* ====== parse_date ====== */
+
+	/**
+	 * Parses date and time in the format DD/MM/YYYY [hh:mm].
+	 * 
+	 * This is needed because strptime is not implemented on Windows (!) and PHP doesn't get any
+	 * other date/time parsing functions till the DateTime class in PHP 5.3.
+	 * 
+	 * @param type $date A date string to parse.
+	 * @return type 
+	 */
+
+	private function parse_date($date)
+	{
+		if (is_int($date)) return $date;
+		$match = preg_match
+			('/(?P<d>[0-9]{1,2})\\/(?P<M>[0-9]{1,2})\\/(?P<y>[0-9]{4})' .
+				'(\\s+(?P<h>[0-9]{1,2})\\:(?P<m>[0-9]{1,2}))?/',
+				$date, $matches);
+		if (!$match) return 0;
+		return mktime(
+			isset($matches['h']) ? (int)$matches['h'] : 12,
+			(int)$matches['m'],
+			0,
+			(int)$matches['M'],
+			(int)$matches['d'],
+			(int)$matches['y']
+		);
+	}
+
 
 	/* ====== sanitize_settings ====== */
 
@@ -208,6 +242,10 @@ class jmct_Core
 					if ($v !== 'absolute' && $v !== 'relative' && $v !== 'off') {
 						$this->settings['DisplayTimeout'] = 'absolute';
 					}
+					break;
+				case 'GlobalClose':
+				case 'GlobalReopen':
+					$this->settings[$k] = $this->parse_date($v);
 					break;
 				default:
 					unset ($this->settings[$k]);
