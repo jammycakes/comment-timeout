@@ -5,12 +5,14 @@ class jmct_PostProcessor
 	private $core;
 	private $posts;
 	private $settings;
+	private $now;
 
 	public function __construct($core, $posts)
 	{
 		$this->core = $core;
 		$this->posts = $posts;
 		$this->settings = $this->core->get_settings();
+		$this->now = time();
 	}
 
 	/* ====== get_post_metainfo ====== */
@@ -61,6 +63,25 @@ class jmct_PostProcessor
 		return $meta;
 	}
 
+	/* ====== global_close ====== */
+	
+	/**
+	 * Applies the "global timeout" settings to a cutoff time.
+	 * 
+	 * @param $time The timeout assuming there is no global cutoff.
+	 * @return The time after global cutoff is taken into consideration.
+	 */
+	
+	private function global_close($time)
+	{
+		$globalClose = $this->settings['GlobalClose'];
+		$globalReopen = $this->settings['GlobalReopen'];
+		if ($globalClose == 0) return $time;
+		if ($globalReopen > 0 && $globalReopen < $this->now) return $time;
+		if ($time < $globalClose) return $time;
+		return $globalClose;
+	}
+	
 
 	public function process_posts()
 	{
@@ -68,6 +89,9 @@ class jmct_PostProcessor
 		// bail out.
 		if ((!$this->core->wp_active) && (!$this->settings['AllowOverride']))
 			return $this->posts;
+
+		// Get the metainfo for the posts
+		// First find the range of post IDs to look up. This keeps our query tight.
 
 		$minID = $maxID = 0;
 		foreach ($this->posts as $p) {
@@ -78,8 +102,6 @@ class jmct_PostProcessor
 				$minID = $p->ID;
 			}
 		}
-
-		// Get the metainfo for the posts
 
 		switch($this->settings['DoPings']) {
 			case 'ignore':
@@ -155,7 +177,7 @@ class jmct_PostProcessor
 				if ($cutoffComment > $cutoff) $cutoff = $cutoffComment;
 			}
 			// Cutoff for comments
-			$p->cutoff_comments = $cutoff;
+			$p->cutoff_comments = $this->global_close($cutoff);
 
 			if (isset($pingmeta)) {
 				$pm =& $pingmeta[$p->ID];
@@ -167,7 +189,7 @@ class jmct_PostProcessor
 					if ($cutoffPing > $cutoff) $cutoff = $cutoffPing;
 				}
 				// Cutoff for pings
-				$p->cutoff_pings = $cutoff;
+				$p->cutoff_pings = $this->global_close($cutoff);
 			}
 
 			/*
@@ -177,11 +199,10 @@ class jmct_PostProcessor
 			 */
 
 			if ($this->settings['Mode'] != 'moderate') {
-				$now = time();
-				if (isset($p->cutoff_comments) && $now > $p->cutoff_comments) {
+				if (isset($p->cutoff_comments) && $this->now > $p->cutoff_comments) {
 					$p->comment_status = 'closed';
 				}
-				if (isset($p->cutoff_pings) && $now > $p->cutoff_pings) {
+				if (isset($p->cutoff_pings) && $this->now > $p->cutoff_pings) {
 					$p->ping_status = 'closed';
 				}
 			}
