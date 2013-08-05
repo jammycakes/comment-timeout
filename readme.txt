@@ -1,6 +1,6 @@
 === Comment Timeout ===
 Contributors: jammycakes
-Donate link: http://bitbucket.org/jammycakes/comment-timeout/
+Donate link: https://github.com/jammycakes/comment-timeout
 Tags: comments, spam
 Requires at least: 2.8
 Tested up to: 3.2
@@ -137,13 +137,13 @@ When reporting bugs, please provide me with the following information:
 5. The steps that need to be taken to reproduce the bug.
 
 If you wish to get hold of the latest development version, or to contribute
-bug fixes or new features, you can clone the project's Mercurial repository:
+bug fixes or new features, you can clone the project on GitHub:
 
-`hg clone https://bitbucket.org/jammycakes/comment-timeout/`
+`git clone git@github.com:jammycakes/comment-timeout.git`
 
 == Redistribution ==
 
-Copyright (c) 2007 James McKay
+Copyright (c) 2007-2013 James McKay
 http://jamesmckay.net/
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -168,4 +168,4 @@ SOFTWARE.
 
 For more information, please visit the plugin's home page:
 
-http://bitbucket.org/jammycakes/comment-timeout/
+https://github.com/jammycakes/comment-timeout
