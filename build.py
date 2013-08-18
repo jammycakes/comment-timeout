@@ -26,7 +26,7 @@ def remove_old_builds():
         shutil.rmtree(BUILD_DIR)
 
 def build_artifact():
-    os.mkdir(BUILD_DIR)
+    os.makedirs(BUILD_DIR, exist_ok = True)
     files = [file for spec in FILESPEC for file in glob(spec)]
     for f in files:
         src = os.path.join(ROOT_DIR, f)
