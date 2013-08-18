@@ -4,7 +4,7 @@ Donate link: http://bitbucket.org/jammycakes/comment-timeout/
 Tags: comments, spam
 Requires at least: 2.8
 Tested up to: 3.2
-Stable tag: 2.4.0
+Stable tag: 2.4.1
 
 Closes comments on blog entries after a user-configurable period of time, with an option to make allowances for active discussions.
 
