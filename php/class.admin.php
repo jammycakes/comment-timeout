@@ -16,21 +16,21 @@ class jmct_Admin
 		$page = add_submenu_page('options-general.php',
 			__('Comment Timeout'), __('Comment Timeout'),
 			'manage_options', 'comment-timeout',
-			array(&$this, 'config_page'));
+			array($this, 'config_page'));
 		if ($this->settings['AllowOverride']) {
 			if (function_exists('add_meta_box')) {
 				add_meta_box('comment-timeout', __('Comment Timeout'),
-					array(&$this, 'post_custombox'), 'post', 'normal');
+					array($this, 'post_custombox'), 'post', 'normal');
 				add_meta_box('comment-timeout', __('Comment Timeout'),
-					array(&$this, 'post_custombox'), 'page', 'normal');
+					array($this, 'post_custombox'), 'page', 'normal');
 			}
 			else {
-				add_action('dbx_post_sidebar', array(&$this, 'post_sidebar'));
-				add_action('dbx_page_sidebar', array(&$this, 'post_sidebar'));
+				add_action('dbx_post_sidebar', array($this, 'post_sidebar'));
+				add_action('dbx_page_sidebar', array($this, 'post_sidebar'));
 			}
-			add_action('save_post', array(&$this, 'save_post'));
+			add_action('save_post', array($this, 'save_post'));
 		}
-		add_action('admin_print_styles-' . $page, array(&$this, 'admin_print_styles'));
+		add_action('admin_print_styles-' . $page, array($this, 'admin_print_styles'));
 	}
 
 	/* ====== admin_print_styles ====== */
@@ -57,12 +57,12 @@ class jmct_Admin
 	{
 		if ('POST' == $_SERVER['REQUEST_METHOD']) {
 			$cmd = $_POST['command'];
-			if (method_exists(&$this, $cmd)) {
+			if (method_exists($this, $cmd)) {
 				check_admin_referer('comment-timeout-' . $cmd);
 				$method = new ReflectionMethod('jmct_Admin', $cmd);
 				$comment = $method->getDocComment();
 				if (preg_match('/^\\s*\\*\\s*@command\\b/im', $comment)) {
-					$method->invoke(&$this);
+					$method->invoke($this);
 				}
 			}
 		}
