@@ -69,6 +69,10 @@ You should contact your theme developer and ask them for a fix.
 
 == Changelog ==
 
+= 2.4.1 =
+
+* Comment Timeout now works with PHP 5.4.
+
 = 2.4.0 =
 
 * You can now optionally specify a date on which to close comments across the board, and then
